@@ -1,0 +1,11 @@
+Model Information:
+* title:	Running animation
+* source:	https://sketchfab.com/3d-models/running-animation-3aeec2055ada426f9b813d0584912406
+* author:	ben.ford137 (https://sketchfab.com/ben.ford137)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Running animation" (https://sketchfab.com/3d-models/running-animation-3aeec2055ada426f9b813d0584912406) by ben.ford137 (https://sketchfab.com/ben.ford137) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
