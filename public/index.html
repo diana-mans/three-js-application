@@ -9,22 +9,26 @@
       html {
         margin: 0;
         padding: 0;
-        overflow-x: hidden;
+        width: 100%;
+        height: 100%;
+        touch-action: pan-x pan-y;
+        overscroll-behavior: none;
       }
       .content {
-        height: 100vh;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         background-color: #f0f0f0;
       }
       #model-container {
-        height: 100vh;
-        width: 100vw;
+        height: 100%;
+        width: 100%;
         position: relative;
       }
       canvas {
         display: block;
+        width: 100%;
       }
     </style>
   </head>

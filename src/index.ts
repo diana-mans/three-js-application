@@ -129,10 +129,58 @@ window.addEventListener('resize', () => {
 });
 
 let totalRotation = 0;
+let touchStartY: number | null = null;
 let currentModelContainer: HTMLElement | null = document.getElementById('model-container');
 
 if (currentModelContainer) {
   currentModelContainer.addEventListener('wheel', handleWheel);
+}
+
+// Добавляем дополнительные слушатели событий для прокрутки на разных устройствах
+window.addEventListener('touchmove', handleTouchMove);
+// window.addEventListener('scroll', handleScroll);
+
+let lastScrollY = 0;
+let isScrolling = false;
+
+function handleScroll() {
+  lastScrollY = window.scrollY || document.documentElement.scrollTop;
+  if (!isScrolling) {
+    window.requestAnimationFrame(updateRotationOnScroll);
+    isScrolling = true;
+  }
+}
+
+function updateRotationOnScroll() {
+  const rotationSpeed = 0.001; // Скорость вращения
+
+  if (currentModelContainer && isElementInViewport(currentModelContainer)) {
+    updateRotation(lastScrollY * rotationSpeed);
+  }
+
+  isScrolling = false;
+}
+
+function handleTouchMove(event: TouchEvent) {
+  const touchY = event.touches[0].clientY - event.touches[1]?.clientY || event.touches[0].clientY;
+  const rotationSpeed = 0.0005; // Скорость вращения
+
+  if (currentModelContainer && isElementInViewport(currentModelContainer)) {
+    event.preventDefault();
+    updateRotation(touchY * rotationSpeed);
+  }
+}
+
+function updateRotation(deltaRotation: number) {
+  totalRotation += deltaRotation;
+
+  if (totalRotation >= Math.PI * 4 || totalRotation <= -Math.PI * 4) {
+    totalRotation = 4 * Math.PI;
+
+    createNewBlocks();
+  }
+
+  pivot.rotation.x = totalRotation;
 }
 
 function handleWheel(event: WheelEvent) {
@@ -140,38 +188,18 @@ function handleWheel(event: WheelEvent) {
   const rotationSpeed = 0.01; // Скорость вращения
 
   if (currentModelContainer && isElementInViewport(currentModelContainer)) {
-    // Обновляем угол поворота в зависимости от направления прокрутки
-    if (deltaY > 0) {
-      // Прокрутка вниз
-      totalRotation += rotationSpeed * deltaY;
-    } else {
-      // Прокрутка вверх
-      totalRotation -= rotationSpeed * Math.abs(deltaY);
-    }
-
-    // Ограничиваем угол поворота до 0 и 720 градусов
-    if (totalRotation >= 4 * Math.PI) {
-      totalRotation = 4 * Math.PI;
-      currentModelContainer?.removeEventListener('wheel', handleWheel);
-      createNewBlocks();
-    } else if (totalRotation <= 0) {
-      totalRotation = 0;
-      currentModelContainer?.removeEventListener('wheel', handleWheel);
-      createNewBlocks();
-    }
-
-    pivot.rotation.x = totalRotation;
+    updateRotation(deltaY * rotationSpeed);
   }
 }
 
 function isElementInViewport(el: HTMLElement) {
   const rect = el.getBoundingClientRect();
+
+  console.log(rect.top, rect.bottom);
   return (
-    rect.top >= 0 &&
-    rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    rect.top >= -150 && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
   );
+  // return true;
 }
 
 function createNewBlocks() {
